@@ -1,3 +1,11 @@
 #!/bin/sh
 
-/jffs/scripts/crutab.sh
+# Install the graduated packet-loss schedule (the single throttling mechanism —
+# we consolidated off the QoS bandwidth limiter).
+/jffs/scripts/packet_loss_crutab.sh
+
+# Make sure the old QoS bandwidth throttle stays disabled. qos_enable persists
+# in nvram, so without this a leftover =1 would keep applying the old 1 Mbps
+# cap even though the QoS scripts are gone. (Run `service restart_qos` once, or
+# reboot, to clear an already-running throttle.)
+nvram set qos_enable=0
