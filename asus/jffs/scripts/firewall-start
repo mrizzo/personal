@@ -1,0 +1,11 @@
+#!/bin/sh
+# Merlin runs this after every firewall (re)start, including at boot. A firewall
+# flush wipes our KIDLOSS chain, so re-apply the last-set packet-loss level.
+#
+# NOTE: if you already have a firewall-start on the router, MERGE these lines
+# into it rather than overwriting.
+STATE="/jffs/scripts/.packet_loss.state"
+if [ -f "$STATE" ]; then
+    read MAC PROB < "$STATE"
+    [ -n "$MAC" ] && [ -n "$PROB" ] && /jffs/scripts/packet_loss.sh 1 "$MAC" "$PROB"
+fi
